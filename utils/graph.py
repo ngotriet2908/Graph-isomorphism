@@ -37,6 +37,7 @@ class Vertex(object):
         :param graph: The graph that this `Vertex` is a part of
         :param label: Optional parameter to specify a label for the
         """
+        self.cur_color_neigh = []
         self.cur_color = 0
         if label is None:
             label = graph._next_label()
