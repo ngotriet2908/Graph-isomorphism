@@ -5,7 +5,7 @@ This is a module for working with directed and undirected multigraphs.
 # version: 01-02-2017, Pieter Bos, Tariq Bontekoe
 
 from typing import List, Union, Set
-
+import copy
 
 class GraphError(Exception):
     """
@@ -199,7 +199,7 @@ class Edge(object):
 
 
 class Graph(object):
-    def __init__(self, directed: bool, n: int=0, simple: bool=False):
+    def __init__(self, directed: bool, n: int = 0, simple: bool = False):
         """
         Creates a graph.
         :param directed: Whether the graph should behave as a directed graph.
@@ -244,7 +244,6 @@ class Graph(object):
             for edge in self._e:
                 if edge.head == vertex or edge.tail == vertex:
                     self._e.remove(edge)
-
 
     def _next_label(self) -> int:
         """
@@ -338,8 +337,20 @@ class Graph(object):
         :return: New graph which is a disjoint union of `self' and `other'.
         """
         # TODO: implementation
-        
-        pass
+        max_v = 0
+        new_graph = copy.deepcopy(self)
+        new_other = copy.deepcopy(other)
+        for v in self.vertices:
+            max_v = max(v.label, max_v)
+
+        for v in new_other.vertices:
+            v.label += max_v + 1
+
+        for v in new_other.vertices:
+            new_graph.add_vertex(Vertex(new_graph, v.label))
+        for e in new_other.edges:
+            new_graph.add_edge(Edge(new_graph.find_vertex_with_label(e.tail), new_graph.find_vertex_with_label(e.head)))
+        return new_graph
 
     def __iadd__(self, other: Union[Edge, Vertex]) -> "Graph":
         """
@@ -368,6 +379,18 @@ class Graph(object):
             result |= v._incidence.get(u, set())
 
         return set(result)
+
+    def find_vertex_with_label(self, u: "Vertex") -> "Vertex":
+        for v in self.vertices:
+            if v.label == u.label:
+                return v
+        return None
+
+    def find_vertex_with_label_int(self, u: int) -> "Vertex":
+        for v in self.vertices:
+            if v.label == u:
+                return v
+        return None
 
     def is_adjacent(self, u: "Vertex", v: "Vertex") -> bool:
         """

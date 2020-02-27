@@ -39,9 +39,9 @@ def color_refinement_without_initial_color(graph: "Graph"):
                 break
         if not changed:
             break
-    print("--------------------------")
-    for v in graph.vertices:
-        print(str(v.label) + ": " + str(v.cur_color))
+    # print("--------------------------")
+    # for v in graph.vertices:
+    #     print(str(v.label) + ": " + str(v.cur_color))
     return graph
 
 
@@ -68,7 +68,7 @@ def compare_two_list(a, b):
     return True
 
 
-def compare_two_graph(a: "Graph", b: "Graph"):
+def compare_two_graph(union: "Graph", a: "Graph", b: "Graph"):
     # color_a = []
     # color_b = []
     # for u in a.vertices:
@@ -79,12 +79,7 @@ def compare_two_graph(a: "Graph", b: "Graph"):
     #
     # return compare_two_list(color_a, color_b)
 
-    for v in a.vertices:
-        v.cur_color_neigh = []
-        for u in v.neighbours:
-            v.cur_color_neigh.append(u.cur_color)
-
-    for v in b.vertices:
+    for v in union.vertices:
         v.cur_color_neigh = []
         for u in v.neighbours:
             v.cur_color_neigh.append(u.cur_color)
@@ -98,14 +93,24 @@ def compare_two_graph(a: "Graph", b: "Graph"):
     #     else:
     #         partition_a[v.cur_color].append(v)
 
-    for v in b.vertices:
-        if v.cur_color not in partition_b:
-            partition_b[v.cur_color] = [v]
-        else:
-            partition_b[v.cur_color].append(v)
-
+    max_label = 0
     for v in a.vertices:
+        max_label = max(max_label, v.label)
+
+    for v in range(max_label + 1, max_label + len(b.vertices) + 1):
+        u = union.find_vertex_with_label_int(v)
+        if u is not None and u.cur_color not in partition_b:
+            partition_b[u.cur_color] = [u]
+        else:
+            partition_b[u.cur_color].append(u)
+
+    for z in range(0, max_label):
+        v = union.find_vertex_with_label_int(z)
+        if v is None:
+            continue
         same_exist = False
+        if v.cur_color not in partition_b:
+            return False
         for u in partition_b[v.cur_color]:
             if compare_two_list(v.cur_color_neigh, u.cur_color_neigh):
                 same_exist = True
@@ -115,14 +120,19 @@ def compare_two_graph(a: "Graph", b: "Graph"):
 
     return True
 
+
 def testing():
-    with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_4_7.grl")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_2_49.grl")) as f:
         G = load_graph(f, read_list=True)
-        for g in G[0]:
-            g = color_refinement_without_initial_color(g)
+        # for g in G[0]:
+        #     g = color_refinement_without_initial_color(g)
         for i in range(0, len(G[0]) - 1):
             for j in range(i + 1, len(G[0])):
-                print("Compare " + str(i) + " and " + str(j) + " :" + str(compare_two_graph(G[0][i], G[0][j])))
+                new_graph = G[0][i].__add__(G[0][j])
+                new_graph = color_refinement_without_initial_color(new_graph)
+                # with open(os.path.join(os.getcwd(), 'union.dot'), 'w') as f:
+                #     write_dot(new_graph, f)
+                print("Compare " + str(i) + " and " + str(j) + " :" + str(compare_two_graph(new_graph, G[0][i], G[0][j])))
 
 
 # gen_prime()
