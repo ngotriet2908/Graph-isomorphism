@@ -69,60 +69,67 @@ def compare_two_list(a, b):
 
 
 def compare_two_graph(union: "Graph", a: "Graph", b: "Graph"):
-    # color_a = []
-    # color_b = []
-    # for u in a.vertices:
-    #     color_a.append(u.cur_color)
-    #
-    # for u in b.vertices:
-    #     color_b.append(u.cur_color)
-    #
-    # return compare_two_list(color_a, color_b)
-
-    for v in union.vertices:
-        v.cur_color_neigh = []
-        for u in v.neighbours:
-            v.cur_color_neigh.append(u.cur_color)
-
-    # partition_a = dict()
-    partition_b = dict()
-
-    # for v in a.vertices:
-    #     if v.cur_color not in partition_a:
-    #         partition_a[v.cur_color] = [v]
-    #     else:
-    #         partition_a[v.cur_color].append(v)
-
     max_label = 0
+
     for v in a.vertices:
         max_label = max(max_label, v.label)
 
+    color_a = []
+    color_b = []
     for v in range(max_label + 1, max_label + len(b.vertices) + 1):
         u = union.find_vertex_with_label_int(v)
-        if u is not None and u.cur_color not in partition_b:
-            partition_b[u.cur_color] = [u]
-        else:
-            partition_b[u.cur_color].append(u)
+        color_a.append(u.cur_color)
 
-    for z in range(0, max_label):
-        v = union.find_vertex_with_label_int(z)
-        if v is None:
-            continue
-        same_exist = False
-        if v.cur_color not in partition_b:
-            return False
-        for u in partition_b[v.cur_color]:
-            if compare_two_list(v.cur_color_neigh, u.cur_color_neigh):
-                same_exist = True
-                break
-        if not same_exist:
-            return False
+    for v in range(0, max_label + 1):
+        u = union.find_vertex_with_label_int(v)
+        color_b.append(u.cur_color)
 
-    return True
+    return compare_two_list(color_a, color_b)
+
+    # for v in union.vertices:
+    #     v.cur_color_neigh = []
+    #     for u in v.neighbours:
+    #         v.cur_color_neigh.append(u.cur_color)
+    #
+    # # partition_a = dict()
+    # partition_b = dict()
+    #
+    # # for v in a.vertices:
+    # #     if v.cur_color not in partition_a:
+    # #         partition_a[v.cur_color] = [v]
+    # #     else:
+    # #         partition_a[v.cur_color].append(v)
+    #
+    # max_label = 0
+    # for v in a.vertices:
+    #     max_label = max(max_label, v.label)
+    #
+    # for v in range(max_label + 1, max_label + len(b.vertices) + 1):
+    #     u = union.find_vertex_with_label_int(v)
+    #     if u is not None and u.cur_color not in partition_b:
+    #         partition_b[u.cur_color] = [u]
+    #     else:
+    #         partition_b[u.cur_color].append(u)
+    #
+    # for z in range(0, max_label):
+    #     v = union.find_vertex_with_label_int(z)
+    #     if v is None:
+    #         continue
+    #     same_exist = False
+    #     if v.cur_color not in partition_b:
+    #         return False
+    #     for u in partition_b[v.cur_color]:
+    #         if compare_two_list(v.cur_color_neigh, u.cur_color_neigh):
+    #             same_exist = True
+    #             break
+    #     if not same_exist:
+    #         return False
+    #
+    # return True
 
 
 def testing():
-    with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_2_49.grl")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_4_7.grl")) as f:
         G = load_graph(f, read_list=True)
         # for g in G[0]:
         #     g = color_refinement_without_initial_color(g)

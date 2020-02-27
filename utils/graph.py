@@ -5,7 +5,7 @@ This is a module for working with directed and undirected multigraphs.
 # version: 01-02-2017, Pieter Bos, Tariq Bontekoe
 
 from typing import List, Union, Set
-import copy
+
 
 class GraphError(Exception):
     """
@@ -330,6 +330,19 @@ class Graph(object):
         edge.head._add_incidence(edge)
         edge.tail._add_incidence(edge)
 
+    def clone_graph(self) -> "Graph":
+        graph = Graph(directed=self.directed)
+
+        for v in self.vertices:
+            new_v = Vertex(graph, label=v.label)
+            graph.add_vertex(new_v)
+
+        for e in self.edges:
+            new_e = Edge(graph.find_vertex_with_label_int(e.tail.label),
+                         graph.find_vertex_with_label_int(e.head.label))
+            graph.add_edge(new_e)
+        return graph
+
     def __add__(self, other: "Graph") -> "Graph":
         """
         Make a disjoint union of two graphs.
@@ -338,8 +351,10 @@ class Graph(object):
         """
         # TODO: implementation
         max_v = 0
-        new_graph = copy.deepcopy(self)
-        new_other = copy.deepcopy(other)
+        # new_graph = copy.deepcopy(self)
+        # new_other = copy.deepcopy(other)
+        new_graph = self.clone_graph()
+        new_other = other.clone_graph()
         for v in self.vertices:
             max_v = max(v.label, max_v)
 
