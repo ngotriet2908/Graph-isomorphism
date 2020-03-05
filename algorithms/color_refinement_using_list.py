@@ -176,28 +176,36 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
     return num
 
 
-def encode_tree(graph: "Graph", u: "Vertex", level):
-    if len(u.neighbours) == 1:
-        return "01"
-    else:
-        sub_encode = []
-        for v in u.neighbours:
-            if level[v.label] > level[u.label]:
-                sub_encode.append(encode_tree(graph, v, level))
-        sub_encode.sort()
-        res = ""
-        for x in sub_encode:
-            res += x
-        return "0" + res + "1"
+def encode_tree_with_array(graph: "Graph", root: "Vertex", level):
+    decoding = [""] * len(graph.vertices)
+
+    def encode_tree(graph: "Graph", u: "Vertex", level):
+        if len(u.neighbours) == 1:
+            decoding[u.label] = "01"
+            return "01"
+        else:
+            sub_encode = []
+            for v in u.neighbours:
+                if level[v.label] > level[u.label]:
+                    sub_encode.append(encode_tree(graph, v, level))
+            sub_encode.sort()
+            res = ""
+            for x in sub_encode:
+                res += x
+            decoding[u.label] = "0" + res + "1"
+            return "0" + res + "1"
+
+    res = encode_tree(graph, root, level)
+    return res, decoding
 
 
 def is_isomorphism_tree(a: "Graph", b: "Graph"):
     root_a = find_root_tree(a)
     root_b = find_root_tree(b)
-    level_a,_ = level_tree(a, root_a)
-    level_b,_ = level_tree(b, root_b)
-    encode_a = encode_tree(a, root_a, level_a)
-    encode_b = encode_tree(b, root_b, level_b)
+    level_a, _ = level_tree(a, root_a)
+    level_b, _ = level_tree(b, root_b)
+    encode_a, _ = encode_tree_with_array(a, root_a, level_a)
+    encode_b, _ = encode_tree_with_array(b, root_b, level_b)
     return encode_a == encode_b
 
 
@@ -438,20 +446,9 @@ def multipli_tree(graph: "Graph", level, u: "Vertex", color_map, giaithua):
     res *= giaithua[per]
     return res
 
-
-def counting_auth_tree(graph: "Graph"):
+def counting_auth_tree_with_encoding(graph: "Graph"):
     new_graph = graph.clone_graph()
-    color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
-    root = new_graph.find_vertex_with_label_int(0)
-    color_partition = create_single_color_partition(color_map)
-
-    for v in color_partition:
-        if len(color_partition[v]) == 1:
-            root = new_graph.find_vertex_with_label_int(color_partition[v][0])
-    tmp_root = find_root_tree(graph)
-    if len(color_partition[color_map[tmp_root.label]]) == 1:
-        root = tmp_root
-
+    root = find_root_tree(graph)
     level, trace = level_tree(new_graph, root)
     giaithua = [1]
     max_nei = 0
@@ -459,8 +456,9 @@ def counting_auth_tree(graph: "Graph"):
         max_nei = max(max_nei, len(v.neighbours))
     for i in range(1, max_nei + 5):
         giaithua.append(i * giaithua[i - 1])
+    _, encoding_map = encode_tree_with_array(new_graph, root, level)
 
-    return multipli_tree(new_graph, level, root, color_map, giaithua)
+    return multipli_tree(new_graph, level, root, encoding_map, giaithua)
 
 
 def testing():
@@ -503,8 +501,7 @@ def testing_counting_tree():
                 res = is_isomorphism_tree(G[0][i], G[0][j])
                 if res:
                     start_time_aut = time.time()
-                    print("Compare " + str(i) + " and " + str(j) + " : " + str(res) +
-                          " " + str(counting_auth_tree(G[0][i])))
+                    print("Compare " + str(i) + " and " + str(j) + " : " +  str(counting_auth_tree_with_encoding(G[0][i])))
 
 
 def testing_tree():

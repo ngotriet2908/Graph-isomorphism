@@ -6,7 +6,6 @@ This is a module for working with directed and undirected multigraphs.
 
 from typing import List, Union, Set
 
-
 class GraphError(Exception):
     """
     An error that occurs while manipulating a `Graph`
