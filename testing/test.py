@@ -1,12 +1,9 @@
-from utils.graph import *
-from utils.graph_io import load_graph, write_dot
-import math
 import os
-import random
 import time
 from algorithms.color_refinement import *
 from algorithms.branching import *
 from algorithms.isomorphic_automorphic_tree import *
+from utils.graph_io import *
 
 
 def testing():
@@ -22,7 +19,7 @@ def testing():
 
                 new_graph = G[0][i].__add__(G[0][j])
                 color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
-                # with open(os.path.join(os.getcwd(), 'union.dot'), 'w') as f:
+                # with open(os.path.join(os.getcwd(), 'name.dot'), 'w') as f:
                 #     write_dot(new_graph, f)
                 # print(create_color_partition(color_map))
                 res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
@@ -43,7 +40,7 @@ def testing_counting_tree():
 
                 new_graph = G[0][i].__add__(G[0][j])
                 color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
-                # with open(os.path.join(os.getcwd(), 'union.dot'), 'w') as f:
+                # with open(os.path.join(os.getcwd(), 'name.dot'), 'w') as f:
                 #     write_dot(new_graph, f)
                 # print(create_color_partition(color_map))
                 res = is_isomorphism_tree(G[0][i], G[0][j])

@@ -1,9 +1,3 @@
-from utils.graph import *
-from utils.graph_io import load_graph, write_dot
-import math
-import os
-import random
-import time
 from algorithms.color_refinement import *
 
 

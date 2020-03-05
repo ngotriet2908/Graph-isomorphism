@@ -1,10 +1,5 @@
 from utils.graph import *
-from utils.graph_io import load_graph, write_dot
 from utils.utils import *
-import math
-import os
-import random
-import time
 
 
 def create_color_map(graph: "Graph"):
@@ -121,4 +116,3 @@ def compare_two_list_with_equal(a, b):
     if flag:
         return "Undecided"
     return "True"
-
