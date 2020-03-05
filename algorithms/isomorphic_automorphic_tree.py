@@ -34,8 +34,6 @@ def is_isomorphism_tree(a: "Graph", b: "Graph"):
     return encode_a == encode_b
 
 
-
-
 def is_Tree(graph: "Graph"):
     visited = [False] * len(graph.vertices)
     if has_cycle_at_v(graph, graph.find_vertex_with_label_int(0), visited, -1):
@@ -112,6 +110,7 @@ def multipli_tree(graph: "Graph", level, u: "Vertex", color_map, giaithua):
     res *= giaithua[per]
     return res
 
+
 def counting_auth_tree_with_encoding(graph: "Graph"):
     new_graph = graph.clone_graph()
     root = find_root_tree(graph)
@@ -125,6 +124,7 @@ def counting_auth_tree_with_encoding(graph: "Graph"):
     _, encoding_map = encode_tree_with_array(new_graph, root, level)
 
     return multipli_tree(new_graph, level, root, encoding_map, giaithua)
+
 
 def has_cycle_at_v(graph: "Graph", v: "Vertex", visited, p):
     visited[v.label] = True
