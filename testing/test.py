@@ -6,58 +6,50 @@ from algorithms.isomorphic_automorphic_tree import *
 from utils.graph_io import *
 
 
-def testing():
-    # with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_6_15.grl")) as f:
-    with open(os.path.join(os.getcwd(), "../graphs/branching/bigtrees1.grl")) as f:
-        G = load_graph(f, read_list=True)
-        # for g in G[0]:
-        #     g = color_refinement_without_initial_color(g)
-        for i in range(0, len(G[0]) - 1):
-            for j in range(i + 1, len(G[0])):
-                # print("Is graph " + str(i) + " a tree ?: " + str(is_Tree(G[0][i])))
-                # print("Is graph " + str(j) + " a tree ?: " + str(is_Tree(G[0][j])))
-
-                new_graph = G[0][i].__add__(G[0][j])
-                color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
-                # with open(os.path.join(os.getcwd(), 'name.dot'), 'w') as f:
-                #     write_dot(new_graph, f)
-                # print(create_color_partition(color_map))
-                res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
-                if res:
-                    print("Compare " + str(i) + " and " + str(j) + " :" + str(res))
-
-
-def testing_counting_tree():
-    # with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_6_15.grl")) as f:
+def group_testing():
     with open(os.path.join(os.getcwd(), "../graphs/branching/bigtrees3.grl")) as f:
         G = load_graph(f, read_list=True)
-        # for g in G[0]:
-        #     g = color_refinement_without_initial_color(g)
+
+        isomorphism_set = []
         for i in range(0, len(G[0]) - 1):
             for j in range(i + 1, len(G[0])):
-                # print("Is graph " + str(i) + " a tree ?: " + str(is_Tree(G[0][i])))
-                # print("Is graph " + str(j) + " a tree ?: " + str(is_Tree(G[0][j])))
-
-                new_graph = G[0][i].__add__(G[0][j])
-                color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
-                # with open(os.path.join(os.getcwd(), 'name.dot'), 'w') as f:
-                #     write_dot(new_graph, f)
-                # print(create_color_partition(color_map))
-                res = is_isomorphism_tree(G[0][i], G[0][j])
+                if is_in_same_set(isomorphism_set, i, j):
+                    continue
+                res = False
+                if is_Tree(G[0][i]) and is_Tree(G[0][j]):
+                    res = is_isomorphism_tree(G[0][i], G[0][j])
+                else:
+                    new_graph = G[0][i].__add__(G[0][j])
+                    color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
+                    res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
                 if res:
-                    start_time_aut = time.time()
-                    print(
-                        "Compare " + str(i) + " and " + str(j) + " : " + str(counting_auth_tree_with_encoding(G[0][i])))
+                    if not is_in_set(isomorphism_set, i) and not is_in_set(isomorphism_set, j):
+                        isomorphism_set.append([i, j])
+                    elif is_in_set(isomorphism_set, i):
+                        for sett in isomorphism_set:
+                            if i in sett:
+                                sett.append(j)
+                    elif is_in_set(isomorphism_set, j):
+                        for sett in isomorphism_set:
+                            if j in sett:
+                                sett.append(i)
 
-
-def testing_tree():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/trees36.grl")) as f:
-        G = load_graph(f)
-        color_map = color_refinement_with_initial_color(G, create_color_map(G))
-        print(color_map)
-        # for g in G[0]:
+        for sett in isomorphism_set:
+            if is_Tree(G[0][sett[0]]):
+                res = counting_auth_tree_with_encoding(G[0][sett[0]])
+                print(str(sett) + " "+ str(res))
+            else:
+                new_graph = G[0][sett[0]].__add__(G[0][sett[1]])
+                color_map = color_refinement_with_initial_color(new_graph, create_color_map(new_graph))
+                res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
+                print(str(sett) + " "+ str(res))
 
 
 start_time = time.time()
-testing_counting_tree()
+group_testing()
 print("Running time: " + str(time.time() - start_time))
+
+
+
+
+
