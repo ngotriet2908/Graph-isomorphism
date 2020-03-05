@@ -1,6 +1,5 @@
 from utils.graph import *
 from utils.graph_io import load_graph, write_dot
-from algorithms.prime import *
 import math
 import os
 
@@ -55,6 +54,24 @@ def gen_prime():
     print(prime)
 
 
+def compare_two_list_with_equal(a, b):
+    if len(a) != len(b):
+        return 2
+
+    a.sort()
+    b.sort()
+
+    flag = False
+    for i in range(0, len(a)):
+        if i < len(a) - 1 and a[i] == a[i + 1]:
+            flag = True
+        if a[i] != b[i]:
+            return "False"
+    if flag:
+        return "Undecided"
+    return "True"
+
+
 def compare_two_list(a, b):
     if len(a) != len(b):
         return False
@@ -65,6 +82,7 @@ def compare_two_list(a, b):
     for i in range(0, len(a)):
         if a[i] != b[i]:
             return False
+
     return True
 
 
@@ -84,7 +102,8 @@ def compare_two_graph(union: "Graph", a: "Graph", b: "Graph"):
         u = union.find_vertex_with_label_int(v)
         color_b.append(u.cur_color)
 
-    return compare_two_list(color_a, color_b)
+    return compare_two_list_with_equal(color_a, color_b)
+
 
     # for v in union.vertices:
     #     v.cur_color_neigh = []
@@ -129,7 +148,7 @@ def compare_two_graph(union: "Graph", a: "Graph", b: "Graph"):
 
 
 def testing():
-    with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_4_7.grl")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/color_refinement/colorref_smallexample_6_15.grl")) as f:
         G = load_graph(f, read_list=True)
         # for g in G[0]:
         #     g = color_refinement_without_initial_color(g)
@@ -139,7 +158,7 @@ def testing():
                 new_graph = color_refinement_without_initial_color(new_graph)
                 # with open(os.path.join(os.getcwd(), 'union.dot'), 'w') as f:
                 #     write_dot(new_graph, f)
-                print("Compare " + str(i) + " and " + str(j) + " :" + str(compare_two_graph(new_graph, G[0][i], G[0][j])))
+                print("Compare " + str(i) + " and " + str(j) + " :" + compare_two_graph(new_graph, G[0][i], G[0][j]))
 
 
 # gen_prime()
