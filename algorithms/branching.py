@@ -1,6 +1,8 @@
 import random
 from algorithms.color_refinement import *
 
+choosing_color_class_rule = "min"
+
 
 def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     new_color_map = clone_color_map(color_map)
@@ -15,28 +17,18 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(new_color_map)
 
-    # max_color, max_value = 0, 0
-    # for x in color_partition_union:
-    #     if len(color_partition_union[x]) > max_value:
-    #         max_color = x
-    #         max_value = len(color_partition_union[x])
-
-    max_color, max_value = 0, 100000000
-    for x in color_partition_union:
-        if max_value > len(color_partition_union[x]) > 3:
-            max_color = x
-            max_value = len(color_partition_union[x])
+    chosen_color = choose_color(choosing_color_class_rule, color_partition_union)
 
     max_color_label = 0
     for x in new_color_map:
         max_color_label = max(max_color_label, new_color_map[x])
 
-    u = color_partition_a[max_color][random.randint(0, len(color_partition_a[max_color]) - 1)]
+    u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
     num = 0
-    for v in color_partition_b[max_color]:
+    for v in color_partition_b[chosen_color]:
         tmp_color_map = clone_color_map(new_color_map)
-        tmp_color_map[u] = max_color + 1
-        tmp_color_map[v] = max_color + 1
+        tmp_color_map[u] = max_color_label + 1
+        tmp_color_map[v] = max_color_label + 1
         num += count_isomorphism(union, tmp_color_map, a, b)
     return num
 
@@ -54,27 +46,17 @@ def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(new_color_map)
 
-    # max_color, max_value = 0, 0
-    # for x in color_partition_union:
-    #     if len(color_partition_union[x]) > max_value:
-    #         max_color = x
-    #         max_value = len(color_partition_union[x])
-
-    max_color, max_value = 0, 100000000
-    for x in color_partition_union:
-        if max_value > len(color_partition_union[x]) > 3:
-            max_color = x
-            max_value = len(color_partition_union[x])
+    chosen_color = choose_color(choosing_color_class_rule, color_partition_union)
 
     max_color_label = 0
     for x in new_color_map:
         max_color_label = max(max_color_label, new_color_map[x])
 
-    u = color_partition_a[max_color][random.randint(0, len(color_partition_a[max_color]) - 1)]
-    for v in color_partition_b[max_color]:
+    u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
+    for v in color_partition_b[chosen_color]:
         tmp_color_map = clone_color_map(new_color_map)
-        tmp_color_map[u] = max_color + 1
-        tmp_color_map[v] = max_color + 1
+        tmp_color_map[u] = max_color_label + 1
+        tmp_color_map[v] = max_color_label + 1
         tmp_res = is_isomorphism(union, tmp_color_map, a, b)
         if tmp_res:
             return True
@@ -172,6 +154,23 @@ def count_false_twins(union: "Graph"):
     return false_twins, has_false_twins
 
 
+def choose_color(option, color_partition_union):
+    max_color = 0
+    if option == "max":
+        max_value = 0
+        for x in color_partition_union:
+            if len(color_partition_union[x]) > max_value:
+                max_color = x
+                max_value = len(color_partition_union[x])
+    elif option == "min":
+        max_value = 1000000000
+        for x in color_partition_union:
+            if max_value > len(color_partition_union[x]) > 3:
+                max_color = x
+                max_value = len(color_partition_union[x])
+    return max_color
+
+
 def compare_two_graph(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     max_label = 0
 
@@ -189,5 +188,3 @@ def compare_two_graph(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
         color_b.append(color_map[u.label])
 
     return compare_two_list_with_equal(color_a, color_b)
-
-

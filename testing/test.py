@@ -7,7 +7,7 @@ from utils.graph_io import *
 
 
 def group_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/bigtrees3.grl")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/branching/cubes6.grl")) as f:
         G = load_graph(f, read_list=True)
 
         isomorphism_set = []
