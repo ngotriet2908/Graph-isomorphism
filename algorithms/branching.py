@@ -2,6 +2,7 @@ import random
 from algorithms.color_refinement import *
 
 choosing_color_class_rule = "min"
+choosing_vertex_rule = "random"
 
 
 def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
@@ -17,14 +18,20 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(new_color_map)
 
-
     max_color_label = 0
     for x in new_color_map:
         max_color_label = max(max_color_label, new_color_map[x])
 
     chosen_color = choose_color(choosing_color_class_rule, color_partition_union, max_color_label)
 
-    u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
+    u = 0
+    if choosing_vertex_rule == "random":
+        u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
+    elif choosing_vertex_rule == "first":
+        u = color_partition_a[chosen_color][0]
+    elif choosing_vertex_rule == "last":
+        u = color_partition_a[chosen_color][len(color_partition_a[chosen_color]) - 1]
+
     num = 0
     for v in color_partition_b[chosen_color]:
         tmp_color_map = clone_color_map(new_color_map)
@@ -47,15 +54,20 @@ def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(new_color_map)
 
-
     max_color_label = 0
     for x in new_color_map:
         max_color_label = max(max_color_label, new_color_map[x])
 
     chosen_color = choose_color(choosing_color_class_rule, color_partition_union, max_color_label)
 
+    u = 0
+    if choosing_vertex_rule == "random":
+        u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
+    elif choosing_vertex_rule == "first":
+        u = color_partition_a[chosen_color][0]
+    elif choosing_vertex_rule == "last":
+        u = color_partition_a[chosen_color][len(color_partition_a[chosen_color]) - 1]
 
-    u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
     for v in color_partition_b[chosen_color]:
         tmp_color_map = clone_color_map(new_color_map)
         tmp_color_map[u] = max_color_label + 1
