@@ -17,11 +17,12 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(new_color_map)
 
-    chosen_color = choose_color(choosing_color_class_rule, color_partition_union)
 
     max_color_label = 0
     for x in new_color_map:
         max_color_label = max(max_color_label, new_color_map[x])
+
+    chosen_color = choose_color(choosing_color_class_rule, color_partition_union, max_color_label)
 
     u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
     num = 0
@@ -46,11 +47,13 @@ def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(new_color_map)
 
-    chosen_color = choose_color(choosing_color_class_rule, color_partition_union)
 
     max_color_label = 0
     for x in new_color_map:
         max_color_label = max(max_color_label, new_color_map[x])
+
+    chosen_color = choose_color(choosing_color_class_rule, color_partition_union, max_color_label)
+
 
     u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
     for v in color_partition_b[chosen_color]:
@@ -154,7 +157,7 @@ def count_false_twins(union: "Graph"):
     return false_twins, has_false_twins
 
 
-def choose_color(option, color_partition_union):
+def choose_color(option, color_partition_union, max_color_label):
     max_color = 0
     if option == "max":
         max_value = 0
@@ -168,6 +171,18 @@ def choose_color(option, color_partition_union):
             if max_value > len(color_partition_union[x]) > 3:
                 max_color = x
                 max_value = len(color_partition_union[x])
+    elif option == "first":
+        for x in color_partition_union:
+            if len(color_partition_union[x]) > 3:
+                max_color = x
+                break
+    elif option == "random":
+        while True:
+            tmp = random.randint(0, max_color_label)
+            if color_partition_union[tmp] is not None and len(color_partition_union) > 3:
+                max_color = tmp
+                break
+
     return max_color
 
 
