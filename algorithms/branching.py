@@ -2,7 +2,7 @@ import random
 from algorithms.color_refinement import *
 
 choosing_color_class_rule = "min"
-choosing_vertex_rule = "random"
+choosing_vertex_rule = "rand"
 
 
 def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
@@ -25,7 +25,7 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
     chosen_color = choose_color(choosing_color_class_rule, color_partition_union, max_color_label)
 
     u = 0
-    if choosing_vertex_rule == "random":
+    if choosing_vertex_rule == "rand":
         u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
     elif choosing_vertex_rule == "first":
         u = color_partition_a[chosen_color][0]
@@ -61,7 +61,7 @@ def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     chosen_color = choose_color(choosing_color_class_rule, color_partition_union, max_color_label)
 
     u = 0
-    if choosing_vertex_rule == "random":
+    if choosing_vertex_rule == "rand":
         u = color_partition_a[chosen_color][random.randint(0, len(color_partition_a[chosen_color]) - 1)]
     elif choosing_vertex_rule == "first":
         u = color_partition_a[chosen_color][0]
@@ -171,18 +171,19 @@ def count_false_twins(union: "Graph"):
 
 def choose_color(option, color_partition_union, max_color_label):
     max_color = 0
-    if option == "max":
-        max_value = 0
-        for x in color_partition_union:
-            if len(color_partition_union[x]) > max_value:
-                max_color = x
-                max_value = len(color_partition_union[x])
-    elif option == "min":
+    if option == "min":
         max_value = 1000000000
         for x in color_partition_union:
             if max_value > len(color_partition_union[x]) > 3:
                 max_color = x
                 max_value = len(color_partition_union[x])
+    elif option == "max":
+        max_value = 0
+        for x in color_partition_union:
+            if len(color_partition_union[x]) > max_value:
+                max_color = x
+                max_value = len(color_partition_union[x])
+
     elif option == "first":
         for x in color_partition_union:
             if len(color_partition_union[x]) > 3:
