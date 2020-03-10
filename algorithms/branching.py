@@ -179,7 +179,7 @@ def choose_color(option, color_partition_union, max_color_label):
     elif option == "random":
         while True:
             tmp = random.randint(0, max_color_label)
-            if color_partition_union[tmp] is not None and len(color_partition_union) > 3:
+            if tmp in color_partition_union and len(color_partition_union) > 3:
                 max_color = tmp
                 break
 
