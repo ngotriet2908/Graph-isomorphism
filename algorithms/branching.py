@@ -86,6 +86,9 @@ def is_Twins(a: "Vertex", b: "Vertex"):
     for u in a.neighbours:
         if u not in b.neighbours:
             return -1
+    for u in b.neighbours:
+        if u not in a.neighbours:
+            return -1
     if false_twins:
         return 0
     return 1

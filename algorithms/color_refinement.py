@@ -60,7 +60,7 @@ def create_color_partition(color_map: "dict"):
     return partition_a, partition_b, partition_union
 
 
-def color_refinement_with_initial_color(graph: "Graph", color_map: "dict"):
+def color_refinement_with_initial_color_basic(graph: "Graph", color_map: "dict"):
     max_color = 0
 
     for v in graph.vertices:
@@ -105,18 +105,18 @@ def color_refinement_with_initial_color_improved(graph: "Graph", color_map: "dic
     for v in graph.vertices:
         max_color = max(max_color, color_map[v.label])
 
-    i = 0
+    color_neighbor = dict()
+    for v in graph.vertices:
+        color_neighbor[v.label] = []
+        for u in v.neighbours:
+            color_neighbor[v.label].append(color_map[u.label])
+
+    color_partition = create_single_color_partition(color_map)
+
     while True:
-        i += 1
         changed = False
-        color_neighbor = dict()
-        for v in graph.vertices:
-            color_neighbor[v.label] = []
-            for u in v.neighbours:
-                color_neighbor[v.label].append(color_map[u.label])
-
-        color_partition = create_single_color_partition(color_map)
-
+        will_remove = []
+        remove_color = 0
         for color, partition in color_partition.items():
             if len(partition) < 2:
                 continue
@@ -129,20 +129,33 @@ def color_refinement_with_initial_color_improved(graph: "Graph", color_map: "dic
 
                     if not compare_two_list(color_neighbor[u], color_neighbor[v]):
                         max_color += 1
+                        remove_color = color
+                        color_partition[max_color] = []
                         for z in partition:
                             if compare_two_list(color_neighbor[z], color_neighbor[v]):
-                                color_map[z] = max_color
+                                will_remove.append(z)
                         changed = True
                         break
+
+                if changed:
+                    break
             if changed:
                 break
         if not changed:
             break
+        else:
+            for now_remove in will_remove:
+                color_partition[remove_color].remove(now_remove)
+                color_map[now_remove] = max_color
+                color_partition[max_color].append(now_remove)
+                zz = graph.find_vertex_with_label_int(now_remove)
+                for z_neigh in zz.neighbours:
+                    color_neighbor[z_neigh.label].remove(remove_color)
+                    color_neighbor[z_neigh.label].append(max_color)
     # print("--------------------------")
     # for v in graph.vertices:
     #     print(str(v.label) + ": " + str(v.cur_color))
     return color_map
-
 
 
 def compare_two_list_with_equal(a, b):
