@@ -1,13 +1,14 @@
 import random
 from algorithms.color_refinement import *
 
-choosing_color_class_rule = "min"
-choosing_vertex_rule = "rand"
+choosing_color_class_rule = "min" # min max rand first
+choosing_vertex_rule = "rand" # rand, first last
 
 
 def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     new_color_map = clone_color_map(color_map)
-    new_color_map = color_refinement_with_initial_color(union, new_color_map)
+    # new_color_map = color_refinement_with_initial_color(union, new_color_map)
+    new_color_map = color_refinement_with_initial_color_improved(union, new_color_map)
 
     res = compare_two_graph(union, new_color_map, a, b)
 
@@ -43,7 +44,8 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
 
 def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     new_color_map = clone_color_map(color_map)
-    new_color_map = color_refinement_with_initial_color(union, new_color_map)
+    # new_color_map = color_refinement_with_initial_color(union, new_color_map)
+    new_color_map = color_refinement_with_initial_color_improved(union, new_color_map)
 
     res = compare_two_graph(union, new_color_map, a, b)
 
@@ -189,7 +191,7 @@ def choose_color(option, color_partition_union, max_color_label):
             if len(color_partition_union[x]) > 3:
                 max_color = x
                 break
-    elif option == "random":
+    elif option == "rand":
         while True:
             tmp = random.randint(0, max_color_label)
             if tmp in color_partition_union and len(color_partition_union) > 3:

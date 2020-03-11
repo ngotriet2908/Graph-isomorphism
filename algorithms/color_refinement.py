@@ -64,7 +64,6 @@ def color_refinement_with_initial_color(graph: "Graph", color_map: "dict"):
     max_color = 0
 
     for v in graph.vertices:
-        # v.cur_color = v.degree
         max_color = max(max_color, color_map[v.label])
 
     i = 0
@@ -98,6 +97,52 @@ def color_refinement_with_initial_color(graph: "Graph", color_map: "dict"):
     # for v in graph.vertices:
     #     print(str(v.label) + ": " + str(v.cur_color))
     return color_map
+
+
+def color_refinement_with_initial_color_improved(graph: "Graph", color_map: "dict"):
+    max_color = 0
+
+    for v in graph.vertices:
+        max_color = max(max_color, color_map[v.label])
+
+    i = 0
+    while True:
+        i += 1
+        changed = False
+        color_neighbor = dict()
+        for v in graph.vertices:
+            color_neighbor[v.label] = []
+            for u in v.neighbours:
+                color_neighbor[v.label].append(color_map[u.label])
+
+        color_partition = create_single_color_partition(color_map)
+
+        for color, partition in color_partition.items():
+            if len(partition) < 2:
+                continue
+            for i in range(0, len(partition) - 1):
+                for j in range(i + 1, len(partition)):
+                    u = partition[i]
+                    v = partition[j]
+                    if u == v:
+                        continue
+
+                    if not compare_two_list(color_neighbor[u], color_neighbor[v]):
+                        max_color += 1
+                        for z in partition:
+                            if compare_two_list(color_neighbor[z], color_neighbor[v]):
+                                color_map[z] = max_color
+                        changed = True
+                        break
+            if changed:
+                break
+        if not changed:
+            break
+    # print("--------------------------")
+    # for v in graph.vertices:
+    #     print(str(v.label) + ": " + str(v.cur_color))
+    return color_map
+
 
 
 def compare_two_list_with_equal(a, b):
