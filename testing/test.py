@@ -4,7 +4,7 @@ from algorithms.color_refinement import *
 from algorithms.branching import *
 from algorithms.isomorphic_automorphic_tree import *
 from utils.graph_io import *
-
+from algorithms.fast_color_refinement import *
 
 def group_testing():
     with open(os.path.join(os.getcwd(), "../graphs/branching/cubes6.grl")) as f:
@@ -46,12 +46,15 @@ def group_testing():
 
 
 def color_ref_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/GraphsFastPartitionRefinement/threepaths320.gr")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/GraphsFastPartitionRefinement/threepaths5.gr")) as f:
         G = load_graph(f)
-        color_map = color_refinement_with_initial_color_improved(G, create_color_map(G))
+        color_map = fast_color_refinement(G, create_color_map(G))
+        color_partition = create_single_color_partition(color_map)
+        print(color_map)
+        print(color_partition)
 
 
 start_time = time.time()
-group_testing()
-# color_ref_testing()
+# group_testing()
+color_ref_testing()
 print("Running time: " + str(time.time() - start_time))
