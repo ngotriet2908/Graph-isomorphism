@@ -136,6 +136,8 @@ def calculate_order(gen):
     if len(gen) <= 0:
         return 1
     alpha = FindNonTrivialOrbit(gen)
+    if alpha is None:
+        return 1
     orbit_alpha = Orbit(gen, alpha)
     stab_alpha = Stabilizer(gen, alpha)
     return calculate_order(stab_alpha) * len(orbit_alpha)

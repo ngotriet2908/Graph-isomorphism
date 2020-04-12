@@ -9,12 +9,14 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-graph = "cographs1"
+graph = "torus144"
 link = prefix + graph + ".grl"
 
-flag_output_iso      = True
-flag_output_auto     = True
+flag_output_iso = False
+flag_output_auto = False
 flag_output_iso_auto = True
+flag_output_auto_single = False
+
 
 def group_testing():
     with open(os.path.join(os.getcwd(), link)) as f:
@@ -26,6 +28,12 @@ def auto_testing():
     with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
         output_automorphism(G[0])
+
+
+def auto_testing_single_test():
+    with open(os.path.join(os.getcwd(), prefix + graph + ".gr")) as f:
+        G = load_graph(f)
+        output_automorphism([G])
 
 
 def iso_testing():
@@ -41,4 +49,6 @@ if flag_output_auto:
     auto_testing()
 if flag_output_iso_auto:
     group_testing()
+if flag_output_auto_single:
+    auto_testing_single_test()
 print("Running time: " + str(time.time() - start_time))

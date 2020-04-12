@@ -53,10 +53,7 @@ def output_automorphism(list_of_graph):
             res = count_automorphism_final(union=new_graph, D=[], I=[], a=g)
             i += 1
 
-        if i < 10:
-            print(str(i) + ":     " + str(res))
-        else:
-            print(str(i) + ":    " + str(res))
+        print((str(i) + ":").ljust(7) + str(res))
 
 
 def output_iso_auto(list_of_graph):
@@ -90,10 +87,10 @@ def output_iso_auto(list_of_graph):
     for sett in isomorphism_set:
         if is_Tree(list_of_graph[sett[0]]):
             res = counting_auth_tree_with_encoding(list_of_graph[sett[0]])
-            print(str(sett) + "                      " + str(res))
+            print(str(sett).ljust(28) + str(res))
         else:
             new_graph = list_of_graph[sett[0]].__add__(list_of_graph[sett[0]])
             color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
             # res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
             res = count_automorphism_final(union=new_graph, D=[], I=[], a=list_of_graph[sett[0]])
-            print(str(sett) + "                      " + str(res))
+            print(str(sett).ljust(28) + str(res))
