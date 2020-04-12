@@ -46,9 +46,9 @@ def group_testing():
 
 
 def color_ref_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/GraphsFastPartitionRefinement/threepaths320.gr")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/GraphsFastPartitionRefinement/threepaths10240.gr")) as f:
         G = load_graph(f)
-        color_map = fast_color_refinement(G, create_color_map(G))
+        color_map = faster_color_refinement(G, create_color_map(G))
         # color_partition = create_single_color_partition(color_map)
         # print(color_map)
         # print(color_partition)

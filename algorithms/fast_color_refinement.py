@@ -39,10 +39,122 @@ def fast_color_refinement_improved(graph: "Graph", color_map: "dict"):
         B.sort(key=get_key)
         for i in range(min_color, max_color + 1):
             tmp = 1
-            #TODO
+            # TODO
+
 
 def get_key(elem):
     return elem[1] * 100000000 + elem[2]
+
+
+def faster_color_refinement(graph: "Graph", color_map: "dict"):
+    A = dict()
+    color_degree = dict()
+    max_color_degree = dict()
+    max_color = 0
+
+    label_to_vertex_map = dict()
+    for v in graph.vertices:
+        label_to_vertex_map[v.label] = v
+
+    for v in graph.vertices:
+        A[v.label] = []
+        max_color_degree[v.label] = 0
+        color_degree[v.label] = 0
+        max_color = max(max_color, color_map[v.label])
+
+    color_partition = create_single_color_partition(color_map)
+
+    # This creates a stack of all current color that needs to be processed
+    stack = []
+    for v in graph.vertices:
+        if color_map[v.label] not in stack:
+            stack.append(color_map[v.label])
+
+    stack.sort()
+    colors_adj = []
+
+    while len(stack) > 0:
+        current_color = stack.pop(0)
+
+        if len(color_partition[current_color]) <= 1:
+            continue
+
+        for v_label in color_partition[current_color]:
+            v = label_to_vertex_map[v_label]
+            for nei in v.neighbours:
+                color_degree[nei.label] += 1
+                if color_degree[nei.label] == 1:
+                    A[color_map[nei.label]].append(nei)
+                if color_map[nei.label] not in colors_adj:
+                    colors_adj.append(color_map[nei.label])
+
+                if color_degree[nei.label] > max_color_degree[color_map[nei.label]]:
+                    max_color_degree[color_map[nei.label]] = color_degree[nei.label]
+
+        min_color_degree = dict()
+        for nei_color in colors_adj:
+            if len(color_partition[nei_color]) != len(A[nei_color]):
+                min_color_degree[nei_color] = 0
+            else:
+                min_color_degree[nei_color] = max_color_degree[nei_color]
+                for v in A[nei_color]:
+                    if color_degree[v.label] < min_color_degree[nei_color]:
+                        min_color_degree[nei_color] = color_degree[v.label]
+
+        color_split = []
+        for nei_color in colors_adj:
+            if min_color_degree[nei_color] < max_color_degree[nei_color]:
+                color_split.append(nei_color)
+        color_split.sort()
+
+        for color in color_split:
+            new_color_to_color_degree_map = dict()
+            max_color_degree_value = max_color_degree[color]
+
+            num_color_degree = dict()
+            for i in range(1, max_color_degree_value + 1):
+                num_color_degree[i] = 0
+            num_color_degree[0] = len(color_partition[color]) - len(A[color])
+            for v in A[color]:
+                num_color_degree[color_degree[v.label]] += 1
+
+            b = 0
+            for i in range(1, max_color_degree_value + 1):
+                if num_color_degree[i] > num_color_degree[b]:
+                    b = i
+
+            in_stack = color in stack
+            for i in range(0, max_color_degree_value + 1):
+                if num_color_degree[i] >= 1:
+                    if i == min_color_degree[color]:
+                        new_color_to_color_degree_map[i] = color
+                        if not in_stack and b != i:
+                            stack.insert(0, new_color_to_color_degree_map[i])
+                    else:
+                        max_color += 1
+                        new_color_to_color_degree_map[i] = max_color
+                        if in_stack or i != b:
+                            stack.insert(0, new_color_to_color_degree_map[i])
+
+            for v in A[color]:
+                if new_color_to_color_degree_map[color_degree[v.label]] != color:
+                    if v.label in color_partition[color]:
+                        color_partition[color].remove(v.label)
+                    next_color = new_color_to_color_degree_map[color_degree[v.label]]
+                    if next_color not in color_partition:
+                        color_partition[next_color] = [v.label]
+                    else:
+                        color_partition[next_color].append(v.label)
+                    color_map[v.label] = next_color
+
+        for color in colors_adj:
+            for v in A[color]:
+                color_degree[v.label] = 0
+            max_color_degree[color] = 0
+            A[color] = []
+        colors_adj = []
+
+    return color_map
 
 
 def fast_color_refinement(graph: "Graph", color_map: "dict"):
