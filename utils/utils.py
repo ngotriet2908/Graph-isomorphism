@@ -1,5 +1,3 @@
-
-
 def compare_two_list(a, b):
     if len(a) != len(b):
         return False
@@ -13,6 +11,7 @@ def compare_two_list(a, b):
 
     return True
 
+
 def is_in_set(set_of_set, a):
     flag = False
     for sett in set_of_set:
@@ -20,6 +19,7 @@ def is_in_set(set_of_set, a):
             flag = True
             break
     return flag
+
 
 def is_in_same_set(set_of_set, a, b):
     flag = False

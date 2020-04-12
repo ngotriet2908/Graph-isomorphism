@@ -9,7 +9,7 @@ from algorithms.count_auth import *
 
 
 def group_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/products72.grl")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/branching/cographs1.grl")) as f:
         G = load_graph(f, read_list=True)
 
         isomorphism_set = []
@@ -21,9 +21,11 @@ def group_testing():
                 if is_Tree(G[0][i]) and is_Tree(G[0][j]):
                     res = is_isomorphism_tree(G[0][i], G[0][j])
                 else:
+                    print("comparing " + str(i) + " and " + str(j))
                     new_graph = G[0][i].__add__(G[0][j])
-                    color_map = color_refinement_with_initial_color_improved(new_graph, create_color_map(new_graph))
-                    res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
+                    color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
+                    # res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
+                    res = is_iso(new_graph, [], [], G[0][i], G[0][j])
                 if res:
                     if not is_in_set(isomorphism_set, i) and not is_in_set(isomorphism_set, j):
                         isomorphism_set.append([i, j])
@@ -35,6 +37,7 @@ def group_testing():
                         for sett in isomorphism_set:
                             if j in sett:
                                 sett.append(i)
+        print("Finish iso")
 
         for sett in isomorphism_set:
             if is_Tree(G[0][sett[0]]):
@@ -42,7 +45,7 @@ def group_testing():
                 print(str(sett) + " " + str(res))
             else:
                 new_graph = G[0][sett[0]].__add__(G[0][sett[0]])
-                color_map = color_refinement_with_initial_color_improved(new_graph, create_color_map(new_graph))
+                color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
                 # res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
                 res = count_automorphism_final(union=new_graph, D=[], I=[], a=G[0][sett[0]])
                 print(str(sett) + " " + str(res))
