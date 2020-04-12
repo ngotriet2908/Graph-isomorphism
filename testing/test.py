@@ -20,7 +20,7 @@ def group_testing():
                     res = is_isomorphism_tree(G[0][i], G[0][j])
                 else:
                     new_graph = G[0][i].__add__(G[0][j])
-                    color_map = color_refinement_with_initial_color_improved(new_graph, create_color_map(new_graph))
+                    color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
                     res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
                 if res:
                     if not is_in_set(isomorphism_set, i) and not is_in_set(isomorphism_set, j):
@@ -40,7 +40,7 @@ def group_testing():
                 print(str(sett) + " " + str(res))
             else:
                 new_graph = G[0][sett[0]].__add__(G[0][sett[1]])
-                color_map = color_refinement_with_initial_color_improved(new_graph, create_color_map(new_graph))
+                color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
                 res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
                 print(str(sett) + " " + str(res))
 
@@ -65,6 +65,6 @@ def color_ref_testing():
 
 
 start_time = time.time()
-# group_testing()
-color_ref_testing()
+group_testing()
+#color_ref_testing()
 print("Running time: " + str(time.time() - start_time))
