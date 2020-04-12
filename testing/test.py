@@ -5,9 +5,11 @@ from algorithms.branching import *
 from algorithms.isomorphic_automorphic_tree import *
 from utils.graph_io import *
 from algorithms.fast_color_refinement import *
+from algorithms.count_auth import *
+
 
 def group_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/cubes6.grl")) as f:
+    with open(os.path.join(os.getcwd(), "../graphs/branching/products72.grl")) as f:
         G = load_graph(f, read_list=True)
 
         isomorphism_set = []
@@ -39,9 +41,10 @@ def group_testing():
                 res = counting_auth_tree_with_encoding(G[0][sett[0]])
                 print(str(sett) + " " + str(res))
             else:
-                new_graph = G[0][sett[0]].__add__(G[0][sett[1]])
+                new_graph = G[0][sett[0]].__add__(G[0][sett[0]])
                 color_map = color_refinement_with_initial_color_improved(new_graph, create_color_map(new_graph))
-                res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
+                # res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
+                res = count_automorphism_final(union=new_graph, D=[], I=[], a=G[0][sett[0]])
                 print(str(sett) + " " + str(res))
 
 
@@ -64,7 +67,15 @@ def color_ref_testing():
         # print(color_partition)
 
 
+def counting_automophism():
+    with open(os.path.join(os.getcwd(), "../graphs/branching/auto_basic.grl")) as f:
+        G = load_graph(f)
+        new_graph = G.__add__(G)
+        print(count_automorphism_final(union=new_graph, D=[], I=[], a=G))
+
+
 start_time = time.time()
-# group_testing()
-color_ref_testing()
+group_testing()
+# color_ref_testing()
+#counting_automophism()
 print("Running time: " + str(time.time() - start_time))
