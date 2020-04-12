@@ -6,99 +6,39 @@ from algorithms.isomorphic_automorphic_tree import *
 from utils.graph_io import *
 from algorithms.fast_color_refinement import *
 from algorithms.count_auth import *
+from utils.output_result import *
 
+prefix = "../graphs/"
+graph = "cographs1"
+link = prefix + graph + ".grl"
+
+flag_output_iso      = True
+flag_output_auto     = True
+flag_output_iso_auto = True
 
 def group_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/cographs1.grl")) as f:
+    with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
-
-        isomorphism_set = []
-        for i in range(0, len(G[0]) - 1):
-            for j in range(i + 1, len(G[0])):
-                if is_in_same_set(isomorphism_set, i, j):
-                    continue
-                res = False
-                if is_Tree(G[0][i]) and is_Tree(G[0][j]):
-                    res = is_isomorphism_tree(G[0][i], G[0][j])
-                else:
-                    print("comparing " + str(i) + " and " + str(j))
-                    new_graph = G[0][i].__add__(G[0][j])
-                    color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
-                    # res = is_isomorphism(new_graph, color_map, G[0][i], G[0][j])
-                    res = is_iso(new_graph, [], [], G[0][i], G[0][j])
-                if res:
-                    if not is_in_set(isomorphism_set, i) and not is_in_set(isomorphism_set, j):
-                        isomorphism_set.append([i, j])
-                    elif is_in_set(isomorphism_set, i):
-                        for sett in isomorphism_set:
-                            if i in sett:
-                                sett.append(j)
-                    elif is_in_set(isomorphism_set, j):
-                        for sett in isomorphism_set:
-                            if j in sett:
-                                sett.append(i)
-        print("Finish iso")
-
-        for sett in isomorphism_set:
-            if is_Tree(G[0][sett[0]]):
-                res = counting_auth_tree_with_encoding(G[0][sett[0]])
-                print(str(sett) + " " + str(res))
-            else:
-                new_graph = G[0][sett[0]].__add__(G[0][sett[0]])
-                color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
-                # res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
-                res = count_automorphism_final(union=new_graph, D=[], I=[], a=G[0][sett[0]])
-                print(str(sett) + " " + str(res))
+        output_iso_auto(G[0])
 
 
 def auto_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/modulesC.grl")) as f:
+    with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
-
-        i = 0
-        for g in G[0]:
-            if is_Tree(g):
-                res = counting_auth_tree_with_encoding(g)
-                print(str(i) + ": " + str(res))
-                i += 1
-            else:
-                new_graph = g.__add__(g)
-                color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
-                # res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
-                res = count_automorphism_final(union=new_graph, D=[], I=[], a=g)
-                print(str(i) + ": " + str(res))
-                i += 1
+        output_automorphism(G[0])
 
 
-def color_ref_testing():
-    with open(os.path.join(os.getcwd(), "../graphs/GraphsFastPartitionRefinement/threepaths320.gr")) as f:
-        G = load_graph(f)
-        color_map = fast_color_refinement(G, create_color_map(G))
-        # color_partition = create_single_color_partition(color_map)
-        # print(color_map)
-        # print(color_partition)
-        print("-------------------------------------------")
-        # color_map = color_refinement_with_initial_color_improved(G, create_color_map(G))
-        # color_partition = create_single_color_partition(color_map)
-        # print(color_map)
-        # print(color_partition)
-        # print("-------------------------------------------")
-        # color_map = color_refinement_with_initial_color_basic(G, create_color_map(G))
-        # color_partition = create_single_color_partition(color_map)
-        # print(color_map)
-        # print(color_partition)
-
-
-def counting_automophism():
-    with open(os.path.join(os.getcwd(), "../graphs/branching/auto_basic.grl")) as f:
-        G = load_graph(f)
-        new_graph = G.__add__(G)
-        print(count_automorphism_final(union=new_graph, D=[], I=[], a=G))
+def iso_testing():
+    with open(os.path.join(os.getcwd(), link)) as f:
+        G = load_graph(f, read_list=True)
+        output_isomorphism(G[0])
 
 
 start_time = time.time()
-# group_testing()
-# color_ref_testing()
-# counting_automophism()
-auto_testing()
+if flag_output_iso:
+    iso_testing()
+if flag_output_auto:
+    auto_testing()
+if flag_output_iso_auto:
+    group_testing()
 print("Running time: " + str(time.time() - start_time))
