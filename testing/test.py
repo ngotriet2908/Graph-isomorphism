@@ -51,6 +51,25 @@ def group_testing():
                 print(str(sett) + " " + str(res))
 
 
+def auto_testing():
+    with open(os.path.join(os.getcwd(), "../graphs/branching/modulesC.grl")) as f:
+        G = load_graph(f, read_list=True)
+
+        i = 0
+        for g in G[0]:
+            if is_Tree(g):
+                res = counting_auth_tree_with_encoding(g)
+                print(str(i) + ": " + str(res))
+                i += 1
+            else:
+                new_graph = g.__add__(g)
+                color_map = faster_color_refinement(new_graph, create_color_map(new_graph))
+                # res = count_isomorphism(new_graph, color_map, G[0][sett[0]], G[0][sett[1]])
+                res = count_automorphism_final(union=new_graph, D=[], I=[], a=g)
+                print(str(i) + ": " + str(res))
+                i += 1
+
+
 def color_ref_testing():
     with open(os.path.join(os.getcwd(), "../graphs/GraphsFastPartitionRefinement/threepaths320.gr")) as f:
         G = load_graph(f)
@@ -78,7 +97,8 @@ def counting_automophism():
 
 
 start_time = time.time()
-group_testing()
+# group_testing()
 # color_ref_testing()
-#counting_automophism()
+# counting_automophism()
+auto_testing()
 print("Running time: " + str(time.time() - start_time))

@@ -133,12 +133,20 @@ def is_iso(union: "Graph", D: list, I: list, a: "Graph", b: "Graph"):
 
 
 def calculate_order(gen):
-    if len(gen) == 0:
+    if len(gen) <= 0:
         return 1
     alpha = FindNonTrivialOrbit(gen)
     orbit_alpha = Orbit(gen, alpha)
     stab_alpha = Stabilizer(gen, alpha)
     return calculate_order(stab_alpha) * len(orbit_alpha)
+
+def membership_testing(gen, f):
+
+    alpha = FindNonTrivialOrbit(gen)
+    orbit_alpha, u = Orbit(gen, alpha, returntransversal=True)
+
+    return len(orbit_alpha)
+
 
 
 def count_automorphism_final(union: "Graph", D: list, I: list, a: "Graph"):
