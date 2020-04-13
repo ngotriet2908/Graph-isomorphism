@@ -34,14 +34,10 @@ def is_isomorphism_tree(a: "Graph", b: "Graph"):
     return encode_a == encode_b
 
 
-visited = []
-
-
 def is_Tree(graph: "Graph"):
-    global visited
     visited = [False] * len(graph.vertices)
     parent = [-1] * len(graph.vertices)
-    if has_cycle_at_v_wo_recursion(graph, graph.find_vertex_with_label_int(0), parent):
+    if has_cycle_at_v_wo_recursion(graph, graph.find_vertex_with_label_int(0), parent, visited):
         return False
     for i in graph.vertices:
         if not visited[i.label]:
@@ -143,8 +139,7 @@ def has_cycle_at_v(graph: "Graph", v: "Vertex", p):
     return False
 
 
-def has_cycle_at_v_wo_recursion(graph: "Graph", s: "Vertex", parent):
-    global visited
+def has_cycle_at_v_wo_recursion(graph: "Graph", s: "Vertex", parent, visited):
     q = []
     q.append(s)
     while len(q) > 0:

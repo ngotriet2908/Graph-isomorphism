@@ -9,7 +9,7 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-graph = "cubes6"
+graph = "bigtrees3"
 link = prefix + graph + ".grl"
 
 flag_output_iso = False
