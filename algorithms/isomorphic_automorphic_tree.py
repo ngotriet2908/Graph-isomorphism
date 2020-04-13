@@ -34,9 +34,14 @@ def is_isomorphism_tree(a: "Graph", b: "Graph"):
     return encode_a == encode_b
 
 
+visited = []
+
+
 def is_Tree(graph: "Graph"):
+    global visited
     visited = [False] * len(graph.vertices)
-    if has_cycle_at_v(graph, graph.find_vertex_with_label_int(0), visited, -1):
+    parent = [-1] * len(graph.vertices)
+    if has_cycle_at_v_wo_recursion(graph, graph.find_vertex_with_label_int(0), parent):
         return False
     for i in graph.vertices:
         if not visited[i.label]:
@@ -126,12 +131,29 @@ def counting_auth_tree_with_encoding(graph: "Graph"):
     return multipli_tree(new_graph, level, root, encoding_map, giaithua)
 
 
-def has_cycle_at_v(graph: "Graph", v: "Vertex", visited, p):
+def has_cycle_at_v(graph: "Graph", v: "Vertex", p):
+    global visited
     visited[v.label] = True
     for u in v.neighbours:
         if not visited[u.label]:
-            if has_cycle_at_v(graph, u, visited, v.label):
+            if has_cycle_at_v(graph, u, v.label):
                 return True
         elif u.label != p:
             return True
+    return False
+
+
+def has_cycle_at_v_wo_recursion(graph: "Graph", s: "Vertex", parent):
+    global visited
+    q = []
+    q.append(s)
+    while len(q) > 0:
+        u = q.pop()
+        visited[u.label] = True
+        for v in u.neighbours:
+            if not visited[v.label]:
+                q.append(v)
+                parent[v.label] = u.label
+            elif v.label != parent[u.label]:
+                return True
     return False
