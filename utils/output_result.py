@@ -52,14 +52,14 @@ def output_automorphism(list_of_graph):
         print((str(i) + ":").ljust(7) + str(res))
 
 
-def output_iso_auto(list_of_graph):
+def output_iso_auto(list_of_graph, flag_testing_tree):
     isomorphism_set = []
     for i in range(0, len(list_of_graph) - 1):
         for j in range(i + 1, len(list_of_graph)):
             if is_in_same_set(isomorphism_set, i, j):
                 continue
             res = False
-            if is_Tree(list_of_graph[i]) and is_Tree(list_of_graph[j]):
+            if flag_testing_tree and is_Tree(list_of_graph[i]) and is_Tree(list_of_graph[j]):
                 res = is_isomorphism_tree(list_of_graph[i], list_of_graph[j])
             else:
                 # print("comparing " + str(i) + " and " + str(j))
@@ -79,7 +79,7 @@ def output_iso_auto(list_of_graph):
 
     print("Sets of isomorphic graphs:  Number of automorphisms:")
     for sett in isomorphism_set:
-        if is_Tree(list_of_graph[sett[0]]):
+        if flag_testing_tree and is_Tree(list_of_graph[sett[0]]):
             res = counting_auth_tree_with_encoding(list_of_graph[sett[0]])
             print(str(sett).ljust(28) + str(res))
         else:

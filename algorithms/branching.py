@@ -198,6 +198,7 @@ def choose_color(option, color_partition_union, max_color_label):
             if len(color_partition_union[x]) > 3:
                 max_color = x
                 break
+
     elif option == "rand":
         while True:
             tmp = random.randint(0, max_color_label)

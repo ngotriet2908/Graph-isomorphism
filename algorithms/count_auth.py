@@ -5,7 +5,7 @@ from algorithms.permv2 import *
 from algorithms.basicpermutationgroup import *
 
 choosing_color_class_rule = "min"  # min max rand first
-choosing_vertex_rule = "first"  # rand, first last
+choosing_vertex_rule = "rand"  # rand first last
 
 X = []
 
