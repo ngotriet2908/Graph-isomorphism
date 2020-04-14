@@ -6,6 +6,7 @@ from algorithms.basicpermutationgroup import *
 
 choosing_color_class_rule = "min"  # min max rand first
 choosing_vertex_rule = "rand"  # rand first last
+flag_membership_testing = False
 
 X = []
 
@@ -49,7 +50,12 @@ def count_automorphism(union: "Graph", D: list, I: list, a: "Graph"):
         return 0
     elif res == "True":
         per = permutation(len(a), mapping=create_permutation(color_map, union, a))
-        X.append(per)
+
+        if not flag_membership_testing:
+            X.append(per)
+
+        elif not membership_testing(X, per):
+            X.append(per)
         return 1
 
     color_partition_a, color_partition_b, color_partition_union = create_color_partition(color_map)
@@ -135,19 +141,45 @@ def is_iso(union: "Graph", D: list, I: list, a: "Graph", b: "Graph"):
 def calculate_order(gen):
     if len(gen) <= 0:
         return 1
+
     alpha = FindNonTrivialOrbit(gen)
     if alpha is None:
         return 1
+
     orbit_alpha = Orbit(gen, alpha)
     stab_alpha = Stabilizer(gen, alpha)
     return calculate_order(stab_alpha) * len(orbit_alpha)
 
 
 def membership_testing(gen, f):
+    if f.istrivial():
+        return True
+
+    if len(gen) <= 0:
+        return False
+
     alpha = FindNonTrivialOrbit(gen)
+    if alpha is None:
+        return True
+
     orbit_alpha, u = Orbit(gen, alpha, returntransversal=True)
 
-    return len(orbit_alpha)
+    beta = None
+    if f.__getitem__(alpha) in orbit_alpha:
+        beta = f.__getitem__(alpha)
+    else:
+        return False
+
+    u_beta = None
+    for per in u:
+        if per.__getitem__(alpha) == beta:
+            u_beta = per
+            break
+
+    xx = (u_beta ** (-1)) * f
+    stab_alpha = Stabilizer(gen, alpha)
+
+    return membership_testing(stab_alpha, xx)
 
 
 def count_automorphism_final(union: "Graph", D: list, I: list, a: "Graph"):
@@ -156,9 +188,12 @@ def count_automorphism_final(union: "Graph", D: list, I: list, a: "Graph"):
     count_automorphism(union=union, D=[], I=[], a=a)
     return calculate_order(X)
 
+
 # H = []
 # p = permutation(6, cycles=[[0, 1, 2], [4, 5]])
 # q = permutation(6, cycles=[[2, 3]])
+# f = permutation(6, cycles=[[0, 2]])
 # H.append(p)
 # H.append(q)
-# print(calculate_order(H))
+# # print(calculate_order(H))
+# print(membership_testing(H, f))
