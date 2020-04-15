@@ -9,7 +9,7 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-graph = "products72"
+graph = "torus144"
 link = prefix + graph + ".grl"
 
 flag_output_iso = False
@@ -19,10 +19,13 @@ flag_output_auto_single = False
 flag_output_graph = False
 flag_testing_tree = False
 
+flag_using_basic_algo = False
+
+
 def group_testing():
     with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
-        output_iso_auto(G[0], flag_testing_tree)
+        output_iso_auto(G[0], flag_testing_tree, flag_using_basic_algo)
 
         if flag_output_graph:
             with open(os.path.join(os.getcwd(), graph + '.dot'), 'w') as f:

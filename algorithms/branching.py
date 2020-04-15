@@ -9,8 +9,8 @@ choosing_vertex_rule = "rand" # rand, first last
 def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     new_color_map = clone_color_map(color_map)
     # new_color_map = color_refinement_with_initial_color(union, new_color_map)
-    # new_color_map = color_refinement_with_initial_color_improved(union, new_color_map)
-    new_color_map = faster_color_refinement(union, new_color_map)
+    new_color_map = color_refinement_with_initial_color_improved(union, new_color_map)
+    # new_color_map = faster_color_refinement(union, new_color_map)
 
     res = compare_two_graph(union, new_color_map, a, b)
 
@@ -47,8 +47,8 @@ def count_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph")
 def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
     new_color_map = clone_color_map(color_map)
     # new_color_map = color_refinement_with_initial_color(union, new_color_map)
-    # new_color_map = color_refinement_with_initial_color_improved(union, new_color_map)
-    new_color_map = faster_color_refinement(union, new_color_map)
+    new_color_map = color_refinement_with_initial_color_improved(union, new_color_map)
+    # new_color_map = faster_color_refinement(union, new_color_map)
 
     res = compare_two_graph(union, new_color_map, a, b)
 
@@ -79,7 +79,6 @@ def is_isomorphism(union: "Graph", color_map: "dict", a: "Graph", b: "Graph"):
         tmp_color_map[v] = max_color_label + 1
         tmp_res = is_isomorphism(union, tmp_color_map, a, b)
         if tmp_res:
-            print("True")
             return True
 
 
