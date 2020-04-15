@@ -9,7 +9,7 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-graph = "torus144"
+graph = "Trees90"
 link = prefix + graph + ".grl"
 
 flag_output_iso = False
@@ -17,7 +17,7 @@ flag_output_auto = False
 flag_output_iso_auto = True
 flag_output_auto_single = False
 flag_output_graph = False
-flag_testing_tree = False
+flag_testing_tree = True
 
 flag_using_basic_algo = False
 

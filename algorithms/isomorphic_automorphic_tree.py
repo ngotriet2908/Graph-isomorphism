@@ -25,13 +25,27 @@ def encode_tree_with_array(graph: "Graph", root: "Vertex", level):
 
 
 def is_isomorphism_tree(a: "Graph", b: "Graph"):
-    root_a = find_root_tree(a)
-    root_b = find_root_tree(b)
+    root_a, root_aa = find_root_tree(a)
+    root_b, root_bb = find_root_tree(b)
+
     level_a, _ = level_tree(a, root_a)
     level_b, _ = level_tree(b, root_b)
+    level_aa = None
+    level_bb = None
+    encode_aa = None
+    encode_bb = None
+
+    if root_aa != -1:
+        level_aa, _ = level_tree(a, root_aa)
+        encode_aa, _ = encode_tree_with_array(a, root_aa, level_aa)
+    if root_bb != -1:
+        level_bb, _ = level_tree(b, root_bb)
+        encode_bb, _ = encode_tree_with_array(b, root_bb, level_bb)
+
     encode_a, _ = encode_tree_with_array(a, root_a, level_a)
     encode_b, _ = encode_tree_with_array(b, root_b, level_b)
-    return encode_a == encode_b
+
+    return encode_a == encode_b or encode_a == encode_bb or encode_aa == encode_b or encode_aa == encode_bb
 
 
 def is_Tree(graph: "Graph"):
@@ -82,8 +96,11 @@ def find_root_tree(graph: "Graph"):
     while trace[root_2] != root_1:
         root_2 = trace[root_2]
         route.append(root_2)
-
-    return graph.find_vertex_with_label_int(route[len(route) // 2])
+    if len(route) % 2 == 0:
+        return graph.find_vertex_with_label_int(route[len(route) // 2]), graph.find_vertex_with_label_int(
+            route[len(route) // 2 + 1])
+    else:
+        return graph.find_vertex_with_label_int(route[len(route) // 2]), -1
 
 
 def multipli_tree(graph: "Graph", level, u: "Vertex", color_map, giaithua):
@@ -114,7 +131,7 @@ def multipli_tree(graph: "Graph", level, u: "Vertex", color_map, giaithua):
 
 def counting_auth_tree_with_encoding(graph: "Graph"):
     new_graph = graph.clone_graph()
-    root = find_root_tree(graph)
+    root,_ = find_root_tree(graph)
     level, trace = level_tree(new_graph, root)
     giaithua = [1]
     max_nei = 0
