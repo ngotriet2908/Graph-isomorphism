@@ -9,7 +9,7 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-more_prefix = "" # project_delivery/
+more_prefix = "project_delivery/" # project_delivery/
 graph = "bigtrees3"
 link = prefix + more_prefix + graph + ".grl"
 
