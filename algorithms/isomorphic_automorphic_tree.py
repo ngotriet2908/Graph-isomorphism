@@ -30,8 +30,6 @@ def is_isomorphism_tree(a: "Graph", b: "Graph"):
 
     level_a, _ = level_tree(a, root_a)
     level_b, _ = level_tree(b, root_b)
-    level_aa = None
-    level_bb = None
     encode_aa = None
     encode_bb = None
 
@@ -132,6 +130,7 @@ def multipli_tree(graph: "Graph", level, u: "Vertex", color_map, giaithua):
 def counting_auth_tree_with_encoding(graph: "Graph"):
     new_graph = graph.clone_graph()
     root,_ = find_root_tree(graph)
+    # root = graph.find_vertex_with_label_int(0)
     level, trace = level_tree(new_graph, root)
     giaithua = [1]
     max_nei = 0

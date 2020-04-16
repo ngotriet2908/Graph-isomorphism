@@ -9,8 +9,9 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-graph = "Trees90"
-link = prefix + graph + ".grl"
+more_prefix = "" # project_delivery/
+graph = "bigtrees3"
+link = prefix + more_prefix + graph + ".grl"
 
 flag_output_iso = False
 flag_output_auto = False
