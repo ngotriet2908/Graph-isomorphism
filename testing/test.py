@@ -10,7 +10,7 @@ from utils.output_result import *
 
 prefix = "../graphs/"
 more_prefix = "" # "project_delivery/" or ""
-graph = "bigtrees3"
+graph = "wheeljoin14"
 link = prefix + more_prefix + graph + ".grl"
 
 flag_output_iso = False
