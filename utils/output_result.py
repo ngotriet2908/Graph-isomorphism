@@ -41,38 +41,39 @@ def output_isomorphism(list_of_graph):
     for sett in isomorphism_set:
         print(sett)
 
-def output_isomorphism_improved(list_of_graph):
+def output_isomorphism_improved(list_of_graph, flag_preprocessing):
     isomorphism_set = []
 
     twins = []
     false_twins = []
-    for i in range(0, len(list_of_graph)):
-        num_twins,_ = count_twins(list_of_graph[i])
-        num_false_twins,_ = count_false_twins(list_of_graph[i])
+    if flag_preprocessing:
+        for i in range(0, len(list_of_graph)):
+            num_twins,_ = count_twins(list_of_graph[i])
+            num_false_twins,_ = count_false_twins(list_of_graph[i])
 
-        num_in_twins = []
-        for set_of_twins in num_twins:
-            num_in_twins.append(len(set_of_twins))
-        if len(num_in_twins) > 0:
-            twins.append(num_in_twins)
-        else:
-            twins.append([0])
+            num_in_twins = []
+            for set_of_twins in num_twins:
+                num_in_twins.append(len(set_of_twins))
+            if len(num_in_twins) > 0:
+                twins.append(num_in_twins)
+            else:
+                twins.append([0])
 
-        num_in_false_twins = []
-        for set_of_false_twins in num_false_twins:
-            num_in_false_twins.append(len(set_of_false_twins))
-        if len(num_in_false_twins) > 0:
-            false_twins.append(num_in_false_twins)
-        else:
-            false_twins.append([0])
+            num_in_false_twins = []
+            for set_of_false_twins in num_false_twins:
+                num_in_false_twins.append(len(set_of_false_twins))
+            if len(num_in_false_twins) > 0:
+                false_twins.append(num_in_false_twins)
+            else:
+                false_twins.append([0])
 
     for i in range(0, len(list_of_graph) - 1):
         for j in range(i + 1, len(list_of_graph)):
             if is_in_same_set(isomorphism_set, i, j):
                 continue
             res = False
-            if not compare_two_list(twins[i],twins[j]) or not compare_two_list(false_twins[i],false_twins[j]):
-                res = False
+            if flag_preprocessing and (not compare_two_list(twins[i],twins[j]) or not compare_two_list(false_twins[i],false_twins[j])):
+                    res = False
             elif is_Tree(list_of_graph[i]) and is_Tree(list_of_graph[j]):
                 res = is_isomorphism_tree(list_of_graph[i], list_of_graph[j])
             elif not is_Tree(list_of_graph[i]) and is_Tree(list_of_graph[j]):
@@ -117,14 +118,41 @@ def output_automorphism(list_of_graph):
         i += 1
 
 
-def output_iso_auto(list_of_graph, flag_testing_tree, flag_using_basic_algo):
+def output_iso_auto(list_of_graph, flag_testing_tree, flag_using_basic_algo, flag_preprocessing):
+    isomorphism_set = []
+
+    twins = []
+    false_twins = []
+    if flag_preprocessing:
+        for i in range(0, len(list_of_graph)):
+            num_twins, _ = count_twins(list_of_graph[i])
+            num_false_twins, _ = count_false_twins(list_of_graph[i])
+
+            num_in_twins = []
+            for set_of_twins in num_twins:
+                num_in_twins.append(len(set_of_twins))
+            if len(num_in_twins) > 0:
+                twins.append(num_in_twins)
+            else:
+                twins.append([0])
+
+            num_in_false_twins = []
+            for set_of_false_twins in num_false_twins:
+                num_in_false_twins.append(len(set_of_false_twins))
+            if len(num_in_false_twins) > 0:
+                false_twins.append(num_in_false_twins)
+            else:
+                false_twins.append([0])
+
     isomorphism_set = []
     for i in range(0, len(list_of_graph) - 1):
         for j in range(i + 1, len(list_of_graph)):
             if is_in_same_set(isomorphism_set, i, j):
                 continue
             res = False
-            if flag_testing_tree and is_Tree(list_of_graph[i]) and is_Tree(list_of_graph[j]):
+            if flag_preprocessing and (not compare_two_list(twins[i],twins[j]) or not compare_two_list(false_twins[i],false_twins[j])):
+                    res = False
+            elif flag_testing_tree and is_Tree(list_of_graph[i]) and is_Tree(list_of_graph[j]):
                 res = is_isomorphism_tree(list_of_graph[i], list_of_graph[j])
             else:
                 # print("comparing " + str(i) + " and " + str(j))

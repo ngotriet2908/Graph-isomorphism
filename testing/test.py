@@ -19,6 +19,7 @@ flag_output_iso_auto = True
 flag_output_auto_single = False
 flag_output_graph = False
 flag_testing_tree = True
+flag_preprocessing = True
 
 flag_using_basic_algo = False
 
@@ -26,7 +27,7 @@ flag_using_basic_algo = False
 def group_testing():
     with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
-        output_iso_auto(G[0], flag_testing_tree, flag_using_basic_algo)
+        output_iso_auto(G[0], flag_testing_tree, flag_using_basic_algo, flag_preprocessing)
 
         if flag_output_graph:
             with open(os.path.join(os.getcwd(), graph + '.dot'), 'w') as f:
@@ -57,7 +58,7 @@ def iso_testing():
     with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
         # output_isomorphism(G[0])
-        output_isomorphism_improved(G[0])
+        output_isomorphism_improved(G[0], flag_preprocessing)
 
         if flag_output_graph:
             with open(os.path.join(os.getcwd(), graph + '.dot'), 'w') as f:
