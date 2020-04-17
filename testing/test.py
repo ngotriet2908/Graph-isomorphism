@@ -9,7 +9,7 @@ from algorithms.count_auth import *
 from utils.output_result import *
 
 prefix = "../graphs/"
-more_prefix = "project_delivery/" # project_delivery/
+more_prefix = "" # "project_delivery/" or ""
 graph = "bigtrees3"
 link = prefix + more_prefix + graph + ".grl"
 
@@ -44,7 +44,7 @@ def auto_testing():
 
 
 def auto_testing_single_test():
-    with open(os.path.join(os.getcwd(), prefix + graph + ".gr")) as f:
+    with open(os.path.join(os.getcwd(), prefix + more_prefix + graph + ".gr")) as f:
         G = load_graph(f)
         output_automorphism([G])
 
@@ -56,7 +56,8 @@ def auto_testing_single_test():
 def iso_testing():
     with open(os.path.join(os.getcwd(), link)) as f:
         G = load_graph(f, read_list=True)
-        output_isomorphism(G[0])
+        # output_isomorphism(G[0])
+        output_isomorphism_improved(G[0])
 
         if flag_output_graph:
             with open(os.path.join(os.getcwd(), graph + '.dot'), 'w') as f:
